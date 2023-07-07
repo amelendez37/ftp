@@ -9,24 +9,33 @@
   </head>
   <body>
     <main>
-      <h1>File Transfer</h1>
-      <div style="display: flex; flex-direction: column">
-        <label for="file">Upload a .rtf, png, or jpeg file</label>
-        <form
-          id="form"
-          method="post"
-          action="http://localhost:3001/file-upload"
-          enctype="multipart/form-data"
-          style="display: flex; flex-direction: column"
-        >
-          <input
-            id="file-input"
-            name="file-upload"
-            type="file"
-            accept="image/png, image/jpeg, .rtf"
-          />
-          <button type="submit" style="width: fit-content">Send</button>
-        </form>
+      <h1 style="margin: auto; width: fit-content">File Transfer</h1>
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+        "
+      >
+        <div style="display: flex; flex-direction: column">
+          <label for="file">Upload an image file</label>
+          <form
+            id="form"
+            method="post"
+            action="http://localhost:3001/file-upload"
+            enctype="multipart/form-data"
+            style="display: flex; flex-direction: column"
+          >
+            <input
+              id="file-input"
+              name="file-upload"
+              type="file"
+              accept="image/png, image/jpeg"
+            />
+            <button type="submit" style="width: fit-content">Send</button>
+          </form>
+        </div>
+        <button id="load-btn">Load and Show Images</button>
       </div>
     </main>
   </body>

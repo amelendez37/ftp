@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
 const app = express();
 const port = 3001;
 
@@ -27,13 +26,27 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
+const upload = multer({ dest: "uploads/" }).single("file-upload");
+
 // get a file by file name
 app.get("/", (req, res) => {
   res.send("hello world");
 });
 
 // text files
-app.post("/file-upload", upload.single("file-upload"), function (req, res) {
-  // req.body contains the text fields
-  console.log("!!!: ", req.file, req.body);
+// app.post("/file-upload", upload.single("file-upload"), function (req, res) {
+//   // req.body contains the text fields
+//   console.log("!!!: ", req.file, req.body);
+// });
+
+app.post("/file-upload", function (req, res) {
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      res.send("Error uploading file. Try again.");
+    } else if (err) {
+      res.send("Something went wrong.");
+    }
+
+    res.redirect("http://localhost:3000");
+  });
 });
