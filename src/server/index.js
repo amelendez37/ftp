@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
 const app = express();
 const port = 3001;
 
@@ -28,17 +30,23 @@ app.listen(port, () => {
 
 const upload = multer({ dest: "uploads/" }).single("file-upload");
 
-// get a file by file name
-app.get("/", (req, res) => {
-  res.send("hello world");
+// get all saved images
+app.get("/images", (req, res) => {
+  const options = {
+    root: `${path.join(__dirname)}/uploads`,
+  };
+
+  fs.readdir("./uploads", (err, files) => {
+    if (err) {
+      res.send("Error getting images.");
+    }
+    files.forEach((file) => {
+      res.sendFile(file, options);
+    });
+  });
 });
 
-// text files
-// app.post("/file-upload", upload.single("file-upload"), function (req, res) {
-//   // req.body contains the text fields
-//   console.log("!!!: ", req.file, req.body);
-// });
-
+// upload an image
 app.post("/file-upload", function (req, res) {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
