@@ -28,33 +28,44 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
-const upload = multer({ dest: "uploads/" }).single("file-upload");
-
-// get all saved images
-app.get("/images", (req, res) => {
-  const options = {
-    root: `${path.join(__dirname)}/uploads`,
-  };
-
-  fs.readdir("./uploads", (err, files) => {
-    if (err) {
-      res.send("Error getting images.");
-    }
-    files.forEach((file) => {
-      res.sendFile(file, options);
-    });
-  });
+const storage = multer.diskStorage({
+  // why are we getting a headers error now?
+  destination: function (req, file, cb) {
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    const { originalname } = file;
+    cb(null, originalname);
+  },
 });
+
+const upload = multer({ storage }).single("file-upload");
 
 // upload an image
 app.post("/file-upload", function (req, res) {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       res.send("Error uploading file. Try again.");
+      return;
     } else if (err) {
+      console.log("Error: ", err);
       res.send("Something went wrong.");
+      return;
     }
-
     res.redirect("http://localhost:3000");
+  });
+});
+
+// get specified image
+app.get("/images/:filename", (req, res) => {
+  const options = {
+    root: `${path.join(__dirname)}/uploads`,
+  };
+
+  fs.readdir("./uploads", (err, files) => {
+    res.set("Content-Type", "image/png");
+    files.forEach((file) => {
+      res.sendFile(file, options);
+    });
   });
 });
