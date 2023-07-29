@@ -57,9 +57,7 @@ app.post("/file-upload", function (req, res) {
 
 // get specified image
 app.get("/images/:filename", (req, res) => {
-  // figure out why 404 is coming back when trying to get file?
   const { filename } = req.params;
-  console.log(filename);
   const filePath = path.join(__dirname, "uploads", filename);
   res.sendFile(filePath);
 });
