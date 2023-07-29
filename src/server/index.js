@@ -29,7 +29,6 @@ app.listen(port, () => {
 });
 
 const storage = multer.diskStorage({
-  // why are we getting a headers error now?
   destination: function (req, file, cb) {
     cb(null, "./uploads");
   },
@@ -58,14 +57,9 @@ app.post("/file-upload", function (req, res) {
 
 // get specified image
 app.get("/images/:filename", (req, res) => {
-  const options = {
-    root: `${path.join(__dirname)}/uploads`,
-  };
-
-  fs.readdir("./uploads", (err, files) => {
-    res.set("Content-Type", "image/png");
-    files.forEach((file) => {
-      res.sendFile(file, options);
-    });
-  });
+  // figure out why 404 is coming back when trying to get file?
+  const { filename } = req.params;
+  console.log(filename);
+  const filePath = path.join(__dirname, "uploads", filename);
+  res.sendFile(filePath);
 });
