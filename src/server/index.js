@@ -3,6 +3,7 @@ const cors = require("cors");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+
 const app = express();
 const port = 3001;
 
@@ -28,6 +29,7 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
+// TODO: look for a way to view file data being passed in req to validate it looks right at time of save
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads");
@@ -55,9 +57,18 @@ app.post("/file-upload", function (req, res) {
   });
 });
 
-// get specified image
 app.get("/images/:filename", (req, res) => {
   const { filename } = req.params;
-  const filePath = path.join(__dirname, "uploads", filename);
-  res.sendFile(filePath);
+  const imagePath = path.join(__dirname, "uploads", filename);
+  res.setHeader("Content-Type", "image/png");
+  fs.createReadStream(imagePath).pipe(res);
+  // fs.readFile(filePath, (err, data) => {
+  //   if (err) {
+  //     res.status(500).send("Error reading file");
+  //   } else {
+  //     res.setHeader("Content-Type", "image/png");
+  //     res.end(data, "binary");
+  //   }
+  // });
+  // res.sendFile(filePath);
 });
