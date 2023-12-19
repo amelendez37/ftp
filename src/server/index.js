@@ -62,13 +62,4 @@ app.get("/images/:filename", (req, res) => {
   const imagePath = path.join(__dirname, "uploads", filename);
   res.setHeader("Content-Type", "image/png");
   fs.createReadStream(imagePath).pipe(res);
-  // fs.readFile(filePath, (err, data) => {
-  //   if (err) {
-  //     res.status(500).send("Error reading file");
-  //   } else {
-  //     res.setHeader("Content-Type", "image/png");
-  //     res.end(data, "binary");
-  //   }
-  // });
-  // res.sendFile(filePath);
 });
